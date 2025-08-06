@@ -3,11 +3,17 @@ import './ProductList.css';
 import CartItem from './CartItem';
 
 // Redux hooks and actions
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from './CartSlice';
 
 function ProductList({ onHomeClick }) {
     const dispatch = useDispatch();
+
+    // ✅ Get total quantity of items in cart from Redux store
+    const totalCartQuantity = useSelector((state) =>
+        state.cart.items.reduce((total, item) => total + item.quantity, 0)
+    );
+
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false);
     const [addedToCart, setAddedToCart] = useState({});
@@ -226,7 +232,7 @@ function ProductList({ onHomeClick }) {
         padding: '15px',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center', // fixed typo here
+        alignItems: 'center',
         fontSize: '20px',
     };
 
@@ -289,6 +295,7 @@ function ProductList({ onHomeClick }) {
                         </a>
                     </div>
                 </div>
+
                 <div style={styleObjUl}>
                     <div>
                         <a href="#" onClick={handlePlantsClick} style={styleA}>
@@ -297,7 +304,7 @@ function ProductList({ onHomeClick }) {
                     </div>
                     <div>
                         <a href="#" onClick={handleCartClick} style={styleA}>
-                            <h1 className="cart">
+                            <h1 className="cart" style={{ position: 'relative' }}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 256 256"
@@ -316,6 +323,22 @@ function ProductList({ onHomeClick }) {
                                         strokeWidth="2"
                                     ></path>
                                 </svg>
+                                {totalCartQuantity > 0 && (
+                                    <span
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-8px',
+                                            right: '-8px',
+                                            background: 'red',
+                                            borderRadius: '50%',
+                                            padding: '5px 10px',
+                                            color: 'white',
+                                            fontSize: '14px',
+                                        }}
+                                    >
+                                        {totalCartQuantity}
+                                    </span>
+                                )}
                             </h1>
                         </a>
                     </div>
